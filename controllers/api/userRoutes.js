@@ -1,58 +1,75 @@
+// importing
+const { User, Post } = require('../../models');
 const router = require('express').Router();
-const { User } = require('../../models');
 
+// GET all users
+router.get('/', async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// POST new user
 router.post('/', async (req, res) => {
   try {
-    const userData = await User.create(req.body);
-
+    const user = await User.create(req.body);
     req.session.save(() => {
-      req.session.user_id = userData.id;
+      req.session.user_id = user.id;
       req.session.logged_in = true;
-
-      res.status(200).json(userData);
+      res.redirect('/');
     });
-  } catch (err) {
-    res.status(400).json(err);
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ error: 'Bad Request' });
   }
 });
 
+// GET user dashboard by ID
+router.get('/:id/dashboard', async (req, res) => {
+  try {
+    const logInStatus = req.session.logged_in;
+    const user = await User.findByPk(req.params.id, {
+      include: [Post],
+    });
+    res.render('dashboard', { logInStatus, user, partials: { header: 'header' } });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
+});
+
+// POST user login
 router.post('/login', async (req, res) => {
   try {
-    const userData = await User.findOne({ where: { email: req.body.email } });
+    const { username, password } = req.body;
+    const user = await User.findOne({
+      where: { username },
+    });
 
-    if (!userData) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
-      return;
-    }
-
-    const validPassword = await userData.checkPassword(req.body.password);
-
-    if (!validPassword) {
-      res
-        .status(400)
-        .json({ message: 'Incorrect email or password, please try again' });
+    if (!user || !user.checkPassword(password)) {
+      res.status(400).json({ message: 'Invalid username or password' });
       return;
     }
 
     req.session.save(() => {
-      req.session.user_id = userData.id;
+      req.session.user_id = user.id;
       req.session.logged_in = true;
-      
-      res.json({ user: userData, message: 'You are now logged in!' });
+      res.redirect('/');
     });
-
-  } catch (err) {
-    res.status(400).json(err);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
+// POST user logout
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {
-    req.session.destroy(() => {
-      res.status(204).end();
-    });
+    req.session.destroy(() => res.status(204).end());
   } else {
     res.status(404).end();
   }

@@ -1,0 +1,30 @@
+{{!-- {{> header}} --}}
+
+<main>
+  <h1>Dashboard</h1>
+    {{!-- if logged in, show these --}}
+  {{#if logInStatus}}
+    <section>
+      <h2>Your posts</h2>
+      {{#each user.posts}}
+        <article class="post">
+          <h3>{{title}}</h3>
+          <p>{{content}}</p>
+          <p>Created on {{createdAt}}</p>
+          <a href="/post/{{id}}">View Post</a>
+        </article>
+      {{/each}}
+    </section>
+
+    <section>
+      <h2>Create a new post</h2>
+      <form id="newPostForm" action="/post" method="POST">
+        <input type="text" name="title" placeholder="Post Title" required>
+        <textarea name="content" placeholder="What you want to write here!" required></textarea>
+        <button type="submit">Create Post</button>
+      </form>
+    </section>
+  {{else}}
+    <p>Sign in!</p>
+  {{/if}}
+</main>

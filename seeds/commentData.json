@@ -1,0 +1,27 @@
+[
+    {
+      "text": "Great post!",
+      "user_id": 1,
+      "post_id": 1
+    },
+    {
+      "text": "I enjoyed reading this.",
+      "user_id": 2,
+      "post_id": 1
+    },
+    {
+      "text": "Looking forward to more content.",
+      "user_id": 3,
+      "post_id": 2
+    },
+    {
+      "text": "Nice work!",
+      "user_id": 4,
+      "post_id": 2
+    },
+    {
+      "text": "This is interesting.",
+      "user_id": 5,
+      "post_id": 3
+    }
+  ]

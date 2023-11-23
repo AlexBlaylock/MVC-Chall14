@@ -1,48 +1,27 @@
-<div class="row">
-  <div class="col-auto">
-    <h2>Welcome, {{name}}!</h2>
-  </div>
-</div>
+{{#if isLoggedIn}}
+  <article class="post">
+    <h2>{{post.title}}</h2>
+    <p>{{post.content}}</p>
+    <p>Created by {{post.user.username}} on {{post.createdAt}}</p>
+  </article>
 
-<div class="row mt-4">
-  <div class="col-md-6">
-    <h3>Create a New Project:</h3>
-
-    <form class="form new-project-form">
-      <div class="form-group">
-        <label for="project-name">project name:</label>
-        <input class="form-input" type="text" id="project-name" name="project-name" />
+  {{!-- Display comments if there are any --}}
+  {{#if post.comments.length}}
+    <h3>Comments:</h3>
+    {{#each post.comments}}
+      <div class="comment">
+        <p>{{this.text}}</p>
+        <p>Comment by {{this.user.username}} on {{this.createdAt}}</p>
       </div>
-      <div class="form-group">
-        <label for="project-funding">needed funding ($):</label>
-        <input class="form-input" type="number" id="project-funding" name="project-funding" />
-      </div>
-      <div class="form-group">
-        <label for="project-desc">description:</label>
-        <textarea class="form-input" id="project-desc" name="project-desc"></textarea>
-      </div>
-      <div class="form-group">
-        <button type="submit" class="btn btn-primary">Create</button>
-      </div>
-    </form>
-  </div>
-
-  {{#if projects.length}}
-  <div class="col-md-6 project-list">
-    <h3>Current Projects:</h3>
-
-    {{#each projects as |project|}}
-    <div class="row mb-2">
-      <div class="col-md-8">
-        <h4><a href="/project/{{project.id}}">{{project.name}}</a></h4>
-      </div>
-      <div class="col-md-4">
-        <button class="btn btn-sm btn-danger" data-id="{{project.id}}">DELETE</button>
-      </div>
-    </div>
     {{/each}}
-  </div>
   {{/if}}
-</div>
 
-<script src="./js/profile.js"></script>
+  {{!-- Add a form for adding new comments --}}
+  <form action="/comment" method="POST">
+    <textarea name="commentText" rows="4" cols="50" placeholder="Add your comment"></textarea>
+    <input type="hidden" name="postId" value="{{post.id}}">
+    <button type="submit">Submit Comment</button>
+  </form>
+{{else}}
+  <p>Please sign in to view this post and its comments.</p>
+{{/if}}

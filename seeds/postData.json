@@ -1,0 +1,27 @@
+[
+    {
+      "title": "Introduction to JavaScript",
+      "content": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "user_id": 1
+    },
+    {
+      "title": "React Hooks Tutorial",
+      "content": "Suspendisse potenti. Mauris quis turpis sed ante accumsan gravida nec eget neque.",
+      "user_id": 2
+    },
+    {
+      "title": "Node.js Best Practices",
+      "content": "Duis hendrerit tristique ligula, non fermentum justo gravida nec.",
+      "user_id": 3
+    },
+    {
+      "title": "Getting Started with Express",
+      "content": "Vestibulum id ex at mi varius tempus et ac justo.",
+      "user_id": 4
+    },
+    {
+      "title": "Database Design Basics",
+      "content": "Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas.",
+      "user_id": 5
+    }
+  ]
