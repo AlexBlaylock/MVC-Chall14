@@ -9,7 +9,6 @@ const SequelizeStore = require('connect-session-sequelize')(session.Store);
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, 'views/layouts'),
   helpers: { withAuth: require('./utils/auth')}
@@ -17,7 +16,11 @@ const hbs = exphbs.create({
 
 const sess = {
   secret: 'Super secret secret',
-  cookie: {},
+  cookie: { 
+    maxAge: 300000,
+    secure: true,
+    httpOnly: true,
+  },
   resave: false,
   saveUninitialized: true,
   store: new SequelizeStore({

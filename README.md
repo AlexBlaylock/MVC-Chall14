@@ -15,7 +15,8 @@ Huge thanks to Andrew Mell, Wyatt Barger for helping me on this challenge.
 
 Thank you to Tom Hearne and Matt Bronstein for teaching the class.
 
-I hope to never see handlebars again.
+I hope to never see handlebars again. I might come back to this in the future to clean it up, mostly just turning in to get it in.
 
+deployed: https://damp-plateau-18831-38a245e55129.herokuapp.com/
 
 ![largely incomplete project lol](challenge14ss.png)
