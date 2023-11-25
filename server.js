@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 3001;
 // const hbs = exphbs.create();
 const hbs = exphbs.create({
   layoutsDir: path.join(__dirname, 'views/layouts'),
-  helpers: { withAuth: require('./auth')}
+  helpers: { withAuth: require('./utils/auth')}
 });
 
 const sess = {
