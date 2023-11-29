@@ -28,33 +28,6 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET user dashboard 
-router.get('/dashboard', async (req, res) => {
-  if (!req.session.logged_in) {
-    res.redirect('/signin');
-    return;
-  }
-
-  try {
-    const userId = req.session.user_id; 
-    const user = await User.findByPk(userId, {
-      include: [Post],
-    });
-
-    if (!user) {
-      res.status(404).send('User not found');
-      return;
-    }
-
-    res.render('dashboard', { 
-      isLoggedIn: req.session.logged_in, 
-      user: user.get({ plain: true }) 
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal Server Error' });
-  }
-});
 
 // POST user login
 router.post('/login', async (req, res) => {

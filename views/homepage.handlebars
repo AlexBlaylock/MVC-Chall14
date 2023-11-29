@@ -1,6 +1,11 @@
 {{!-- {{> header}} --}}
 <main>
   {{#if isLoggedIn}}
+    <article class="post">
+      <h2>Hard Coded Post</h2>
+      <p>blahblah</p>
+      <p>Created by FakeUser123 Today</p>
+    </article>
     {{#each posts}}
       <article class="post">
         <h2>{{title}}</h2>

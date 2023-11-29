@@ -3,18 +3,47 @@ const { User, Comment, Post } = require('../../models');
 const router = require('express').Router();
 const withAuth = require('../../utils/auth');
 
-// GET all posts
-router.get('/', async (req, res) => {
+// GET user dashboard 
+router.get('/dashboardZ', async (req, res) => {
+  console.log("Dashboard route handler reached");
+  if (!req.session.logged_in) {
+    res.redirect('/signin');
+    return;
+  }
+
   try {
-    const posts = await Post.findAll({
-      include: [Comment],
+    const userId = req.session.user_id; 
+    const user = await User.findByPk(userId, {
+      include: [Post],
     });
-    res.status(200).json(posts);
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    res.render('dashboard', { 
+      isLoggedIn: req.session.logged_in, 
+      user: user.get({ plain: true }) 
+    });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    res.status(500).json({ message: 'Internal Server Error' });
   }
 });
+
+// GET all posts
+// router.get('/', async (req, res) => {
+//   try {
+//     const posts = await Post.findAll({
+//       include: [Comment],
+//     });
+//     res.status(200).json(posts);
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).json({ error: 'Internal Server Error' });
+//   }
+// });
 
 // GET post by ID
 router.get('/:id', async (req, res) => {
