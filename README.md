@@ -23,4 +23,8 @@ andrew mell helped me with my server.js file to help with my deployment to herok
 
 deployed: https://damp-plateau-18831-38a245e55129.herokuapp.com/
 
+11/29/23:
+
+updated slightly further trying to push grade a bit higher, still unable to get routes to work (constantly hitting 404s when trying to access http://localhost:3001/dashboard and etc). Logging in works now though somewhat and i added a lot of comments to the code. 
+
 ![largely incomplete project lol](challenge14ss.png)

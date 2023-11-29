@@ -16,3 +16,4 @@ router.use('/users', userRoutes);
 
 module.exports = router;
 
+// i imagine my issue is in here, just really unable to figure it out. my routes go to the right files, but when trying to render them using handlebars they just constantly 404.

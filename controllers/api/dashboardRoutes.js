@@ -4,14 +4,18 @@ const router = require('express').Router();
 const withAuth = require('../../utils/auth');
 
 // GET user dashboard 
-router.get('/dashboardZ', async (req, res) => {
+// tried changing name of file, maybe this was the issue? does not seem to be it, still will not even console log in my terminal
+router.get('/dashboard', async (req, res) => {
+  // console log to try and find out why my route wont hit
   console.log("Dashboard route handler reached");
+  // if not logged in, goes to signin
   if (!req.session.logged_in) {
     res.redirect('/signin');
     return;
   }
 
   try {
+    // shows a users posts in the dashboard
     const userId = req.session.user_id; 
     const user = await User.findByPk(userId, {
       include: [Post],
@@ -22,7 +26,8 @@ router.get('/dashboardZ', async (req, res) => {
       return;
     }
 
-    res.render('dashboard', { 
+    // renders dashboard handlebar if it worked
+    res.render('dashboardZ', { 
       isLoggedIn: req.session.logged_in, 
       user: user.get({ plain: true }) 
     });
@@ -48,7 +53,9 @@ router.get('/dashboardZ', async (req, res) => {
 // GET post by ID
 router.get('/:id', async (req, res) => {
   try {
+    // login checker
     const isLoggedIn = req.session.logged_in;
+    // finds post by id and user and comments on post
     const postData = await Post.findByPk(Number(req.params.id), {
       include: [
         { model: Comment, include: [{ model: User }] },
@@ -61,6 +68,7 @@ router.get('/:id', async (req, res) => {
     }
 
     const posts = [postData].map(post => post.get({ plain: true }));
+    // renders post template
     res.render('post', { posts, isLoggedIn });
   } catch (error) {
     console.error(error);
@@ -71,11 +79,13 @@ router.get('/:id', async (req, res) => {
 // POST new comment
 router.post('/:id', withAuth, async (req, res) => {
   try {
-    const newComment = await Comment.create({
+    // creates new comment under a post
+     await Comment.create({
       ...req.body,
       post_id: Number(req.params.id),
       user_id: req.session.user_id,
     });
+    // redirects to post
     res.redirect(req.get('referer'));
   } catch (error) {
     console.error(error);
@@ -86,15 +96,19 @@ router.post('/:id', withAuth, async (req, res) => {
 // PUT update post by ID
 router.put('/:id', withAuth, async (req, res) => {
   try {
+    // finds post to update by id
     const findPost = await Post.findByPk(Number(req.params.id));
+    // if post is not yours it 403s
     if (!findPost || findPost.user_id !== req.session.user_id) {
       return res.status(403).json({ message: 'Post not yours' });
     }
 
+    // updates post with new data
     const [updatedCount] = await Post.update(req.body, {
       where: { id: Number(req.params.id) },
     });
 
+    // 404s if update didn't happen
     if (updatedCount === 0) {
       return res.status(404).json({ message: 'Post not found' });
     }
@@ -109,7 +123,9 @@ router.put('/:id', withAuth, async (req, res) => {
 // DELETE post by ID
 router.delete('/:id', withAuth, async (req, res) => {
   try {
+    // finds post by id
     const post = await Post.findByPk(Number(req.params.id));
+    // 403s if post is not yours (doesnt match user id for the session)
     if (!post || post.user_id !== req.session.user_id) {
       return res.status(403).json({ message: 'Post not yours' });
     }

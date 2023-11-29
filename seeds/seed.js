@@ -28,3 +28,5 @@ const seedDatabase = async () => {
 };
 
 seedDatabase();
+
+// seeded data for testing
