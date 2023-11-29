@@ -4,7 +4,7 @@
   <nav>
     <ul>
       <li><a href="/">Home</a></li>
-      {{#if logInStatus}}
+      {{#if isLoggedIn}}
         <li><a href="/dashboard">Dashboard</a></li>
         <li><a href="/logout">Logout</a></li>
       {{else}}

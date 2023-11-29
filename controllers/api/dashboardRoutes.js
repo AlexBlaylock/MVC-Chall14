@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
 // GET post by ID
 router.get('/:id', async (req, res) => {
   try {
-    const logInStatus = req.session.logged_in;
+    const isLoggedIn = req.session.logged_in;
     const postData = await Post.findByPk(Number(req.params.id), {
       include: [
         { model: Comment, include: [{ model: User }] },
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
     }
 
     const posts = [postData].map(post => post.get({ plain: true }));
-    res.render('post', { posts, logInStatus });
+    res.render('post', { posts, isLoggedIn });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Internal Server Error' });

@@ -28,14 +28,28 @@ router.post('/', async (req, res) => {
   }
 });
 
-// GET user dashboard by ID
-router.get('/:id/dashboard', async (req, res) => {
+// GET user dashboard 
+router.get('/dashboard', async (req, res) => {
+  if (!req.session.logged_in) {
+    res.redirect('/signin');
+    return;
+  }
+
   try {
-    const logInStatus = req.session.logged_in;
-    const user = await User.findByPk(req.params.id, {
+    const userId = req.session.user_id; 
+    const user = await User.findByPk(userId, {
       include: [Post],
     });
-    res.render('dashboard', { logInStatus, user, partials: { header: 'header' } });
+
+    if (!user) {
+      res.status(404).send('User not found');
+      return;
+    }
+
+    res.render('dashboard', { 
+      isLoggedIn: req.session.logged_in, 
+      user: user.get({ plain: true }) 
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
@@ -44,6 +58,8 @@ router.get('/:id/dashboard', async (req, res) => {
 
 // POST user login
 router.post('/login', async (req, res) => {
+  console.log('Login route hit');
+  console.log('Request body:', req.body);
   try {
     const { username, password } = req.body;
     const user = await User.findOne({
@@ -58,6 +74,8 @@ router.post('/login', async (req, res) => {
     req.session.save(() => {
       req.session.user_id = user.id;
       req.session.logged_in = true;
+      console.log("Session user_id:", req.session.user_id);
+      console.log("Session logged_in:", req.session.logged_in);
       res.redirect('/');
     });
   } catch (error) {
@@ -69,9 +87,9 @@ router.post('/login', async (req, res) => {
 // POST user logout
 router.post('/logout', (req, res) => {
   if (req.session.logged_in) {
-    req.session.destroy(() => res.status(204).end());
+    req.session.destroy(() => res.status(204).json({ isLoggedIn: false }));
   } else {
-    res.status(404).end();
+    res.status(404).json({ isLoggedIn: false });
   }
 });
 

@@ -3,7 +3,7 @@
 <main>
   <h1>Dashboard</h1>
     {{!-- if logged in, show these --}}
-  {{#if logInStatus}}
+  {{#if isLoggedIn}}
     <section>
       <h2>Your posts</h2>
       {{#each user.posts}}
